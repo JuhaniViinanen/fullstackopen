@@ -14,6 +14,7 @@ function getRandom(max) {
 
 function App() {
   const [selected, setSelected] = useState(0)
+  const [highest, setHighest] = useState(0)
 
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -28,13 +29,17 @@ function App() {
   const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
 
   const vote = () => {
+    // Add new vote
     const newVotes = [...votes]
     newVotes[selected] += 1
     setVotes(newVotes)
+    // Check if highest
+    if (newVotes[selected] > newVotes[highest]) setHighest(selected)
   }
 
   return (
     <>
+    <h1>Anecdote of the day</h1>
     <div>{anecdotes[selected]}</div>
     <div>{`has ${votes[selected]} votes`}</div>
     <Button handleClick={() => vote(selected)} text={"vote"}/>
@@ -42,6 +47,10 @@ function App() {
       handleClick={() => setSelected(getRandom(anecdotes.length))} 
       text={"next anecdote"}
     />
+    <h1>Anecdote with the most votes</h1>
+    <div>{anecdotes[highest]}</div>
+    <div>{`has ${votes[highest]} votes`}</div>
+    <></>
     </>
   )
 }
