@@ -1,7 +1,10 @@
 
-const Personitem = ({ name, number }) => {
+const Personitem = ({ name, number, id , handleDelete}) => {
     return (
-        <li>{name} {number}</li>
+        <li>
+            {`${name} ${number}`}
+            <button onClick={() => handleDelete(id)}>delete</button>
+        </li>
     )
 }
 

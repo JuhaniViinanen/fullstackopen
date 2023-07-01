@@ -42,6 +42,15 @@ const App = () => {
     }
   }
 
+  const handleDelete = id => {
+    const personToDelete = persons.find(person => person.id === id)
+    if (window.confirm(`Delete ${personToDelete.name}?`)) {
+      phoneBook
+        .remove(id)
+        .then(() => setPersons(persons.filter(person => person.id !== id)))
+    }
+  }
+
   const personsFiltered = persons.filter( person => 
     person.name.toLowerCase().includes(filter.toLowerCase())
     )
@@ -63,7 +72,7 @@ const App = () => {
         numberChangeHandler={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Personslist persons={personsFiltered} />
+      <Personslist persons={personsFiltered} handleDelete={handleDelete} />
     </div>
   )
 }
