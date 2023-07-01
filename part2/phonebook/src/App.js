@@ -24,8 +24,16 @@ const App = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault()
-    if (persons.find(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+    const person = persons.find(person => person.name === newName)
+    if (person !== undefined) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const updatedPerson = {...person, number: newNumber}
+        phoneBook
+          .change(updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
+          })
+      }
     } else {
       const newPerson = { 
         name: newName, 
@@ -34,12 +42,10 @@ const App = () => {
 
       phoneBook
         .create(newPerson)
-        .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson))
-          setNewName("")
-          setNewNumber("")
-        })
+        .then(returnedPerson => setPersons(persons.concat(returnedPerson)))
     }
+    setNewName("")
+    setNewNumber("")
   }
 
   const handleDelete = id => {
