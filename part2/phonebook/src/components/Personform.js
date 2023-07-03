@@ -6,10 +6,12 @@ const Personform = ({
     numberValue, 
     numberChangeHandler}) => {
     return (
-        <form onSubmit={submitHandler}>
+        <form onSubmit={submitHandler} >
             <div>
-                name: <input value={nameValue} onChange={nameChangeHandler} />
-                number: <input value={numberValue} onChange={numberChangeHandler} />
+                <label>name:</label><input value={nameValue} onChange={nameChangeHandler} />
+            </div>
+            <div>
+                <label>number:</label><input value={numberValue} onChange={numberChangeHandler} />
             </div>
             <div>
                 <button type="submit">add</button>

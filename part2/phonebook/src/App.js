@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Filter from "./components/Filter"
 import Personform from './components/Personform'
 import Personslist from "./components/Personslist"
+import Notification from "./components/Notification"
 
 import phoneBook from "./services/phonebook"
 
@@ -11,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState("")
   const [filter, setFilter] = useState("")
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     phoneBook
@@ -33,6 +35,7 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
           })
+        notify(`Updated ${newName}`)
       }
     } else {
       const newPerson = { 
@@ -43,6 +46,7 @@ const App = () => {
       phoneBook
         .create(newPerson)
         .then(returnedPerson => setPersons(persons.concat(returnedPerson)))
+      notify(`Added ${newName}`)
     }
     setNewName("")
     setNewNumber("")
@@ -54,6 +58,7 @@ const App = () => {
       phoneBook
         .remove(id)
         .then(() => setPersons(persons.filter(person => person.id !== id)))
+      notify(`Deleted ${personToDelete.name}`)
     }
   }
 
@@ -61,9 +66,15 @@ const App = () => {
     person.name.toLowerCase().includes(filter.toLowerCase())
     )
 
+  const notify = (message) => {
+    setNotificationMessage(message)
+    setTimeout( () => setNotificationMessage(null), 5000)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter 
         text={"Filter phonebook:"} 
         value={filter} 
