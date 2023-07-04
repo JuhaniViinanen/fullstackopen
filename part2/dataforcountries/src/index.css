@@ -1,0 +1,11 @@
+/*
+background-color has to be something other than white, since many flags contain white.
+*/
+body {
+    background-color: antiquewhite;
+}
+
+.countrieslist {
+    list-style: none;
+    padding-left: 0;
+}
