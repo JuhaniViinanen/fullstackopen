@@ -9,6 +9,7 @@ const baseURL = "https://studies.cs.helsinki.fi/restcountries/api"
 function App() {
   const [countries, setCountries] = useState([])
   const [search, setSearch] = useState("")
+  const [focus, setFocus] = useState("")
 
   useEffect(() => {
     axios
@@ -20,20 +21,36 @@ function App() {
     country.name.common.toLowerCase().includes(search.toLocaleLowerCase())
     )
 
+  const clickHandler = name => {
+    setFocus(countries.find(country => country.name.common === name))
+  }
+
+  const searchHandler = e => {
+    setFocus("")
+    setSearch(e.target.value)
+  }
+
   let content
-  if (countriesToShow.length > 10) {
+  if (focus !== "") {
+    content = <DetailedCountryView country={focus} />
+  } else if (countriesToShow.length > 10) {
     content = <div>Too many matches, specify another filter</div>
   } else if (countriesToShow.length > 1) {
-    content = <CountriesList countries={countriesToShow} />
+    content = <CountriesList 
+      countries={countriesToShow} 
+      handleClick={clickHandler} 
+    />
   } else if (countriesToShow.length === 1) {
     content = <DetailedCountryView country={countriesToShow[0]} />
   } else {
     content = <div></div>
   }
 
+  console.log("render")
+
   return (
     <div>
-      <SearchField value={search} handleChange={e => setSearch(e.target.value)} />
+      <SearchField value={search} handleChange={searchHandler} />
       {content}
     </div>
     

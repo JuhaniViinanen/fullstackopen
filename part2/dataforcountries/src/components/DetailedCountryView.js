@@ -7,8 +7,7 @@ const DetailedCountryView = ({country}) => {
             <h3>Languages:</h3>
             <ul>
                 {Object.keys(country.languages).map(key => 
-                <li key={key}>{country.languages[key]}</li>
-                    )}
+                <li key={key}>{country.languages[key]}</li> )}
             </ul>
             <img src={country.flags.png} alt={country.flags.alt} />
         </div>
