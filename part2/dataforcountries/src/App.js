@@ -46,8 +46,6 @@ function App() {
     content = <div></div>
   }
 
-  console.log("render")
-
   return (
     <div>
       <SearchField value={search} handleChange={searchHandler} />
