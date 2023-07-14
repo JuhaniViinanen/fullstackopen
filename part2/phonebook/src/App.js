@@ -56,6 +56,10 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           notify(`Added ${newName}`)
         })
+        .catch(error => {
+          setErrorMessage(error.response.data.error)
+          setTimeout( () => setErrorMessage(null), 5000)
+        })
     }
     setNewName("")
     setNewNumber("")
