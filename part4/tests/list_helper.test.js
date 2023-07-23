@@ -24,9 +24,9 @@ describe("total likes", () => {
 })
 
 describe("favorite blog", () => {
-    test("of empty list is an empty object", () => {
+    test("of empty list is null", () => {
         const res = listHelper.favoriteBlog([])
-        expect(res).toEqual({})
+        expect(res).toEqual(null)
     })
 
     test("of list with one element is that element", () => {
@@ -37,5 +37,30 @@ describe("favorite blog", () => {
     test("of list with multiple elements is the one with most likes", () => {
         const res = listHelper.favoriteBlog(dummydata)
         expect(res).toEqual(dummydata[2])
+    })
+})
+
+describe("author with most blogs", () => {
+    test("of empty list is null", () => {
+        const res = listHelper.mostBlogs([])
+        expect(res).toEqual(null)
+    })
+
+    test("of list with one blog is that the author of that blog", () => {
+        const res = listHelper.mostBlogs([dummydata[1]])
+        const out = {
+            "author": dummydata[1].author,
+            "blogs": 1
+        }
+        expect(res).toEqual(out)
+    })
+
+    test("of list with multiple elements is correct", () => {
+        const res = listHelper.mostBlogs(dummydata)
+        const out = {
+            "author": "Robert C. Martin",
+            "blogs": 3
+        }
+        expect(res).toEqual(out)
     })
 })
