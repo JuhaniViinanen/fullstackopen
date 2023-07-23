@@ -64,3 +64,27 @@ describe("author with most blogs", () => {
         expect(res).toEqual(out)
     })
 })
+
+describe("author with most likes", () => {
+    test("of empty list is null", () => {
+        const res = listHelper.mostLikes([])
+        expect(res).toEqual(null)
+    })
+
+    test("of list with one blog is the author of that blog", () => {
+        const res = listHelper.mostLikes([dummydata[0]])
+        const out = {
+            "author": "Michael Chan",
+            "likes": 7
+        }
+        expect(res).toEqual(out)
+    })
+
+    test("of list with multiple elements is correct", () => {
+        const res = listHelper.mostLikes(dummydata)
+        const out = {
+            "author": "Edsger W. Dijkstra",
+            "likes": 17
+        }
+    })
+})
