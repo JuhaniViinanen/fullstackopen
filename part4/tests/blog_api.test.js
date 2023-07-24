@@ -70,6 +70,21 @@ describe("POST /api/blogs", () => {
         expect(res.headers["content-type"]).toMatch(/application\/json/)
         expect(res.body.likes).toBe(0)
     })
+
+    test("responds with status code 400 when title or url are missing", async () => {
+        const noTitle = {
+            author: "Spongebob Squarepants",
+            url: "https://www.bikinibottom.se/blogs/livingunderthesea"
+        }
+        const noUrl = {
+            title: "Living under the sea",
+            author: "Spongebob Squarepants"
+        }
+        const resNoTitle = await api.post("/api/blogs").send(noTitle)
+        const resNoUrl = await api.post("/api/blogs").send(noUrl)
+        expect(resNoTitle.status).toBe(400)
+        expect(resNoUrl.status).toBe(400)
+    })
 })
 
 
