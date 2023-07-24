@@ -41,6 +41,25 @@ describe("GET /api/blogs", () => {
     })
 })
 
+describe("POST /api/blogs", () => {
+    test("correctly saves the information posted into database", async () => {
+        const newBlog = {
+            title: "Living under the sea",
+            author: "Spongebob Squarepants",
+            url: "https://www.bikinibottom.se/blogs/livingunderthesea",
+            likes: 13
+        }
+        const res = await api.post("/api/blogs").send(newBlog)
+        expect(res.status).toBe(201)
+        expect(res.headers["content-type"]).toMatch(/application\/json/)
+        delete res.body.id
+        expect(res.body).toEqual(newBlog)
+
+        const getres = await api.get("/api/blogs")
+        expect(getres.body).toHaveLength(initBlogs.length + 1)
+    })
+})
+
 
 afterAll(async () => {
     mongoose.connection.close()
