@@ -58,6 +58,18 @@ describe("POST /api/blogs", () => {
         const getres = await api.get("/api/blogs")
         expect(getres.body).toHaveLength(initBlogs.length + 1)
     })
+
+    test("uses a default value of 0 for the likes property", async () => {
+        const newBlog = {
+            title: "Living under the sea",
+            author: "Spongebob Squarepants",
+            url: "https://www.bikinibottom.se/blogs/livingunderthesea"
+        }
+        const res = await api.post("/api/blogs").send(newBlog)
+        expect(res.status).toBe(201)
+        expect(res.headers["content-type"]).toMatch(/application\/json/)
+        expect(res.body.likes).toBe(0)
+    })
 })
 
 
