@@ -27,11 +27,18 @@ beforeEach(async () => {
 })
 
 
-test("GET /api/blogs returns all blogs as json", async () => {
-    const res = await api.get("/api/blogs")
-    expect(res.status).toBe(200)
-    expect(res.headers["content-type"]).toMatch(/application\/json/)
-    expect(res.body).toHaveLength(initBlogs.length)
+describe("GET /api/blogs", () => {
+    test("returns all blogs in database as json", async () => {
+        const res = await api.get("/api/blogs")
+        expect(res.status).toBe(200)
+        expect(res.headers["content-type"]).toMatch(/application\/json/)
+        expect(res.body).toHaveLength(initBlogs.length)
+    })
+
+    test("names the unique identifier of a blog as id", async () => {
+        const res = await api.get("/api/blogs")
+        expect(res.body[0].id).toBeDefined()
+    })
 })
 
 
