@@ -87,6 +87,22 @@ describe("POST /api/blogs", () => {
     })
 })
 
+describe("PUT /api/blogs/:id", () => {
+    test("succeeds with status code 200", async () => {
+        const blogs = await api.get("/api/blogs")
+        const update = { likes: blogs.body[0].likes + 1 }
+        const res = await api.put(`/api/blogs/${blogs.body[0].id}`).send(update)
+        expect(res.status).toBe(200)
+        expect(res.body.likes).toEqual(update.likes)
+    })
+
+    test("fails with status code 400 when id is bad", async () => {
+        const update = { likes: 1 }
+        const res = await api.put("/api/blogs/badID").send(update)
+        expect(res.status).toBe(400)
+    })
+})
+
 describe("DELETE /api/blogs/:id", () => {
     test("succeeds with status code 204 when id exists", async () => {
         const blogs = await api.get("/api/blogs")
