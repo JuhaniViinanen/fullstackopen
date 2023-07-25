@@ -87,6 +87,30 @@ describe("POST /api/blogs", () => {
     })
 })
 
+describe("DELETE /api/blogs/:id", () => {
+    test("succeeds with status code 204 when id exists", async () => {
+        const blogs = await api.get("/api/blogs")
+        expect(blogs.body).toHaveLength(initBlogs.length)
+        const idToDelete = blogs.body[0].id
+        const res = await api.delete(`/api/blogs/${idToDelete}`)
+        expect(res.status).toBe(204)
+        const blogsAfter = await api.get("/api/blogs")
+        expect(blogsAfter.body).toHaveLength(initBlogs.length - 1)
+    })
+
+    test("fails with status code 400 when id is malformed", async () => {
+        const res = await api.delete("/api/blogs/badID")
+        expect(res.status).toBe(400)
+    })
+
+    test("succeeds without changes to database when id doesn't exist", async () => {
+        const blogs = await api.get("/api/blogs")
+        const res = await api.delete("/api/blogs/5a422a851b54a676234d17f7")
+        expect(res.status).toBe(204)
+        const blogsAfter = await api.get("/api/blogs")
+        expect(blogsAfter.body).toEqual(blogs.body)
+    })
+})
 
 afterAll(async () => {
     mongoose.connection.close()
