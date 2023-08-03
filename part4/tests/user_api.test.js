@@ -25,7 +25,7 @@ beforeEach(async () => {
 })
 
 describe("GET /api/users", () => {
-    test("returns all the blogs in the right format", async () => {
+    test("returns all the users in the right format", async () => {
         const res = await api.get("/api/users")
         expect(res.status).toBe(200)
         expect(res.headers["content-type"]).toMatch(/application\/json/)

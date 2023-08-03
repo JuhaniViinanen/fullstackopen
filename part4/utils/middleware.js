@@ -23,7 +23,7 @@ const tokenExtractor = (req, res, next) => {
 
 const userExtractor = async (req, res, next) => {
     try{
-        const decodedToken = jwt.verify(req.token, process.env.CYPHER)
+        const decodedToken = jwt.verify(req.token, process.env.SECRET)
         if (!decodedToken.id) return res.status(401).json({ error: "invalid token" })
         req.user = await User.findById(decodedToken.id)
         next()
@@ -40,7 +40,7 @@ const errorHandler = (error, req, res, next) => {
     } else if (error.name === "ValidationError") {
         return res.status(400).json({ error: error.message })
     } else if (error.name === "JsonWebTokenError") {
-        return res.status(400).json({ error: error.message })
+        return res.status(401).json({ error: error.message })
     }
 
     next(error)
