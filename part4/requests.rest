@@ -47,3 +47,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0Y2FhMGQzM
     "url": "not provided",
     "likes": 0
 }
+
+###
+DELETE http://localhost:3003/api/blogs/64cbd344c120c79b348064aa HTTP/1.1
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0Y2FhMGQzMDIxMDkzNmM5ZGZmYmE5NCIsInVzZXJuYW1lIjoic3F1YXJlYm9iMTE3IiwiaWF0IjoxNjkxMDc5NDY1fQ.4FgNb4X0wqlokJarBNNGcRAmjM7ZTw9WCI1Htqwjg8o
