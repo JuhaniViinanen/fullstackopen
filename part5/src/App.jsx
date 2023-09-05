@@ -3,10 +3,6 @@ import Blog from "./components/Blog"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 
-// TODO
-// blogs.js implement needed services, use async/await
-// handlelogin
-
 function App() {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState("")
@@ -19,16 +15,30 @@ function App() {
       .then(blogs => setBlogs(blogs))
   }, [])
 
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem("loggedUser")
+    if (loggedUser) {
+      const user = JSON.parse(loggedUser)
+      setUser(user)
+    }
+  }, [])
+
   const handleLogin = async event => {
     event.preventDefault()
     try {
       const user = await loginService.login({ username, password })
+      window.localStorage.setItem("loggedUser", JSON.stringify(user))
       setUser(user)
     } catch (exception) {
       console.log("login failed", exception)
     }
     setUsername("")
     setPassword("")
+  }
+
+  const handleLogout = () => {
+    window.localStorage.removeItem("loggedUser")
+    setUser(null)
   }
 
   const loginForm = () => (
@@ -61,7 +71,10 @@ function App() {
   const blogsForm = () => (
     <div>
       <h2>blogs</h2>
-      <p>{user.name} logged in</p>
+      <div>
+        <p>{user.name} logged in</p>
+        <button onClick={ handleLogout }>logout</button>
+      </div>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
