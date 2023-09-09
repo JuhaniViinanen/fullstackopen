@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import Blog from "./components/Blog"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
+import SuccessMessage from "./components/SuccessMessage"
+import ErrorMessage from "./components/ErrorMessage"
 
 function App() {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +14,9 @@ function App() {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+
+  const [successMessage, setSuccessMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
 
   useEffect(() => {
     blogService
@@ -28,6 +33,16 @@ function App() {
     }
   }, [])
 
+  const showSuccessMessage = message => {
+    setSuccessMessage(message)
+    setTimeout( () => setSuccessMessage(""), 5000 )
+  }
+
+  const showErrorMessage = message => {
+    setErrorMessage(message)
+    setTimeout( () => setErrorMessage(""), 5000 )
+  }
+
   const handleLogin = async event => {
     event.preventDefault()
     try {
@@ -35,8 +50,9 @@ function App() {
       window.localStorage.setItem("loggedUser", JSON.stringify(user))
       setUser(user)
       blogService.setToken(user.token)
+      showSuccessMessage("login succesful.")
     } catch (exception) {
-      console.log(exception.response.data.error)
+      showErrorMessage(`${exception.response.data.error}`)
     }
     setUsername("")
     setPassword("")
@@ -46,6 +62,7 @@ function App() {
     window.localStorage.removeItem("loggedUser")
     setUser(null)
     blogService.setToken(null)
+    showSuccessMessage("logout successful.")
   }
 
   const handleNewBlogCreation = async event => {
@@ -56,14 +73,14 @@ function App() {
       setTitle("")
       setUrl("")
       setBlogs(blogs.concat(res))
+      showSuccessMessage(`blog ${res.title} created.`)
     } catch (exception) {
-      console.log(exception.response.data.error)
+      showErrorMessage(`${exception.response.data.error}`)
     }
   }
 
   const loginForm = () => (
     <div>
-      <h2>log in to application</h2>
       <form onSubmit={ handleLogin }>
         <div>
           username
@@ -90,7 +107,6 @@ function App() {
 
   const blogsForm = () => (
     <div>
-      <h2>blogs</h2>
       <div>
         <p>{user.name} logged in</p>
         <button onClick={ handleLogout }>logout</button>
@@ -133,6 +149,12 @@ function App() {
 
   return (
     <div>
+      {user === null ?
+        <h2>log in to application</h2> :
+        <h2>blogs</h2>
+      }
+      <SuccessMessage message={successMessage} />
+      <ErrorMessage message={errorMessage} />
       {user === null ? loginForm() : blogsForm()}
     </div>
   )
