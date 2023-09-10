@@ -1,4 +1,5 @@
 import { useState } from "react"
+import blogService from "../services/blogs"
 
 const blogStyle = {
     paddingTop: 10,
@@ -10,9 +11,15 @@ const blogStyle = {
 
 const Blog = ({ blog }) => {
     const [detailsVisible, setDetailsVisible] = useState(false)
+    const [likes, setLikes] = useState(blog.likes)
 
-    const handleLike = event => {
-        console.log(`liked the blog ${blog.title}`)
+    const handleLike = async event => {
+        try {
+            const res = await blogService.like(blog.id, likes + 1)
+            setLikes(res.likes)
+        } catch (exception) {
+            console.log(exception)
+        }
     }
 
     const simple = () => (
@@ -27,7 +34,7 @@ const Blog = ({ blog }) => {
             <div>{blog.title} {blog.author}</div>
             <div>{blog.url}</div>
             <div>
-                {blog.likes}
+                {likes}
                 <button onClick={handleLike}>like</button>
             </div>
             <div>{blog.user.username}</div>
