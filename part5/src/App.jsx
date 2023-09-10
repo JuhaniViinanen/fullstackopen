@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     blogService
       .getAll()
-      .then(blogs => setBlogs(blogs))
+      .then(blogs => setBlogs(blogs.sort( (a,b) => b.likes - a.likes )))
   }, [])
 
   useEffect(() => {
@@ -76,6 +76,18 @@ function App() {
     }
   }
 
+  const handleLike = async (blogId, newLikes) => {
+    try {
+      const res = await blogService.like(blogId, newLikes)
+      const newBlogs = blogs.filter( blog => blog.id !== res.id )
+      newBlogs.push(res)
+      newBlogs.sort( (a,b) => b.likes - a.likes)
+      setBlogs(newBlogs)
+    } catch (exception) {
+      console.log(exception)
+    }
+  }
+
   const loginForm = () => (
     <div>
       <form onSubmit={ handleLogin }>
@@ -102,7 +114,6 @@ function App() {
     </div>
   )
 
-  // TODO: Togglable needs to close when blog is created
   const blogsForm = () => (
     <div>
       <div>
@@ -113,7 +124,7 @@ function App() {
         <BlogForm createBlog={handleNewBlogCreation} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} likeFunction={handleLike}/>
       )}
     </div>
   )
