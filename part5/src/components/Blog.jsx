@@ -17,20 +17,20 @@ const Blog = ({ blog }) => {
 
     const simple = () => (
         <div>
-            <p>{blog.title} {blog.author}</p>
+            <div>{blog.title} {blog.author}</div>
             <button onClick={() => setDetailsVisible(true)}>more</button>
         </div>
     )
 
     const details = () => (
         <div>
-            <p>{blog.title} {blog.author}</p>
-            <p>{blog.url}</p>
-            <p>
+            <div>{blog.title} {blog.author}</div>
+            <div>{blog.url}</div>
+            <div>
                 {blog.likes}
                 <button onClick={handleLike}>like</button>
-            </p>
-            <p>{blog.user.username}</p>
+            </div>
+            <div>{blog.user.username}</div>
             <button onClick={() => setDetailsVisible(false)}>less</button>
         </div>
     )

@@ -68,7 +68,7 @@ function App() {
   const handleNewBlogCreation = async newBlog => {
     try {
       const res = await blogService.create(newBlog)
-      setBlogs(blogs.concat(res))
+      setBlogs(blogs.concat({...res, user: { username: user.username }}))
       showSuccessMessage(`blog ${res.title} created.`)
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
