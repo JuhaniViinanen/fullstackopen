@@ -68,7 +68,8 @@ function App() {
   const handleNewBlogCreation = async newBlog => {
     try {
       const res = await blogService.create(newBlog)
-      setBlogs(blogs.concat({...res, user: { username: user.username }}))
+      console.log()
+      setBlogs(blogs.concat({...res, user: user }))
       showSuccessMessage(`blog ${res.title} created.`)
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
@@ -79,12 +80,27 @@ function App() {
   const handleLike = async (blogId, newLikes) => {
     try {
       const res = await blogService.like(blogId, newLikes)
-      const newBlogs = blogs.filter( blog => blog.id !== res.id )
-      newBlogs.push(res)
+      const newBlogs = blogs.map( blog =>
+        blog.id === res.id ?
+        {...blog, likes: res.likes} :
+        blog
+        )
       newBlogs.sort( (a,b) => b.likes - a.likes)
       setBlogs(newBlogs)
     } catch (exception) {
       console.log(exception)
+    }
+  }
+
+  const handleDelete = async blog => {
+    if (window.confirm(`Delete blog ${blog.title} by ${blog.author}?`)) {
+      try {
+        await blogService.remove(blog.id)
+        setBlogs( blogs.filter(b => b.id !== blog.id) )
+        showSuccessMessage(`${blog.title} by ${blog.author} deleted`)
+      } catch (exception) {
+        console.log(exception)
+      }
     }
   }
 
@@ -124,7 +140,13 @@ function App() {
         <BlogForm createBlog={handleNewBlogCreation} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} likeFunction={handleLike}/>
+        <Blog
+          key={blog.id}
+          blog={blog}
+          likeFunction={handleLike}
+          deleteFunction={handleDelete}
+          appUser={user}
+        />
       )}
     </div>
   )

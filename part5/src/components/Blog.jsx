@@ -8,26 +8,33 @@ const blogStyle = {
     marginBottom: 5
 }
 
-const Blog = ({ blog, likeFunction }) => {
+const Blog = ({ blog, likeFunction , deleteFunction, appUser}) => {
     const [detailsVisible, setDetailsVisible] = useState(false)
 
     const simple = () => (
         <div>
-            <div>{blog.title} {blog.author}</div>
-            <button onClick={() => setDetailsVisible(true)}>more</button>
+            <div>
+                {blog.title} {blog.author}
+                <button onClick={() => setDetailsVisible(true)}>more</button>
+            </div>
         </div>
     )
 
     const details = () => (
         <div>
-            <div>{blog.title} {blog.author}</div>
+            <div>
+                {blog.title} {blog.author}
+                <button onClick={() => setDetailsVisible(false)}>less</button>
+            </div>
             <div>{blog.url}</div>
             <div>
                 {blog.likes}
                 <button onClick={() => likeFunction(blog.id, blog.likes + 1)}>like</button>
             </div>
-            <div>{blog.user.username}</div>
-            <button onClick={() => setDetailsVisible(false)}>less</button>
+            <div>{blog.user.name}</div>
+            {( blog.user.username === appUser.username ) && 
+              <button onClick={() => deleteFunction(blog)}>delete</button>
+            }
         </div>
     )
 
