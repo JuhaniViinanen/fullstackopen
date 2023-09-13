@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from "react"
 import Blog from "./components/Blog"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
@@ -6,11 +6,10 @@ import SuccessMessage from "./components/SuccessMessage"
 import ErrorMessage from "./components/ErrorMessage"
 import Togglable from "./components/Togglable"
 import BlogForm from "./components/BlogForm"
+import LoginForm from "./components/LoginForm"
 
 function App() {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
 
   const [successMessage, setSuccessMessage] = useState("")
@@ -43,8 +42,7 @@ function App() {
     setTimeout( () => setErrorMessage(""), 5000 )
   }
 
-  const handleLogin = async event => {
-    event.preventDefault()
+  const handleLogin = async (username, password) => {
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem("loggedUser", JSON.stringify(user))
@@ -54,8 +52,6 @@ function App() {
     } catch (exception) {
       showErrorMessage(`${exception.response.data.error}`)
     }
-    setUsername("")
-    setPassword("")
   }
 
   const handleLogout = () => {
@@ -69,7 +65,7 @@ function App() {
     try {
       const res = await blogService.create(newBlog)
       console.log()
-      setBlogs(blogs.concat({...res, user: user }))
+      setBlogs(blogs.concat({ ...res, user: user }))
       showSuccessMessage(`blog ${res.title} created.`)
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
@@ -82,9 +78,9 @@ function App() {
       const res = await blogService.like(blogId, newLikes)
       const newBlogs = blogs.map( blog =>
         blog.id === res.id ?
-        {...blog, likes: res.likes} :
-        blog
-        )
+          { ...blog, likes: res.likes } :
+          blog
+      )
       newBlogs.sort( (a,b) => b.likes - a.likes)
       setBlogs(newBlogs)
     } catch (exception) {
@@ -103,32 +99,6 @@ function App() {
       }
     }
   }
-
-  const loginForm = () => (
-    <div>
-      <form onSubmit={ handleLogin }>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({target}) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({target}) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </div>
-  )
 
   const blogsForm = () => (
     <div>
@@ -159,7 +129,10 @@ function App() {
       }
       <SuccessMessage message={successMessage} />
       <ErrorMessage message={errorMessage} />
-      {user === null ? loginForm() : blogsForm() }
+      {user === null ?
+        <LoginForm loginFunction={handleLogin} /> :
+        blogsForm()
+      }
     </div>
   )
 }
