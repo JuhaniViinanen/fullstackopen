@@ -49,4 +49,23 @@ describe("<Blog />", () => {
     screen.getByText(blog.url, { exact: false })
     screen.getByText(blog.likes, { exact: false })
   })
+
+  test("like function is called twice when like button is clicked twice", async () => {
+    const user = userEvent.setup()
+    const addLike = jest.fn()
+    render(
+      <Blog
+        blog={blog}
+        likeFunction={addLike}
+        deleteFunction={jest.fn()}
+        appUser={user}
+      />
+    )
+    const moreButton = screen.getByText("more")
+    await user.click(moreButton)
+    const likeButton = screen.getByText("like")
+    await user.click(likeButton)
+    await user.click(likeButton)
+    expect(addLike.mock.calls).toHaveLength(2)
+  })
 })
