@@ -33,4 +33,20 @@ describe("<Blog />", () => {
     expect(screen.queryByText(blog.url, { exact: false })).toBeNull()
     expect(screen.queryByText(blog.likes, { exact: false })).toBeNull()
   })
+
+  test("shows url and likes after \"more\" button is clicked", async () => {
+    const user = userEvent.setup()
+    render(
+      <Blog
+        blog={blog}
+        likeFunction={jest.fn()}
+        deleteFunction={jest.fn()}
+        appUser={user}
+      />
+    )
+    const moreButton = screen.getByText("more")
+    await user.click(moreButton)
+    screen.getByText(blog.url, { exact: false })
+    screen.getByText(blog.likes, { exact: false })
+  })
 })
