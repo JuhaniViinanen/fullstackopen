@@ -47,7 +47,7 @@ describe("Blog app", function() {
     })
   })
 
-  describe("When logged in", function() {
+  describe("when logged in", function() {
     beforeEach(function() {
       cy.login({ username: "squarebob117", password: "supersecret" })
     })
@@ -61,6 +61,24 @@ describe("Blog app", function() {
 
       cy.contains("blog Testing with Cypress created.")
       cy.contains("Testing with Cypress Anonymous")
+    })
+
+    describe("and blogs exist", function() {
+      beforeEach(function() {
+        cy.createBlog({ title: "Testing", author: "Anon", url: "http://notreal.cs" })
+      })
+
+      it("a blog can be liked", function() {
+        cy.contains("Testing Anon").parent().as("test1")
+        cy.get("@test1").contains("more").click()
+        cy.get("@test1")
+          .should("contain", "0")
+          .and("not.contain", "1")
+        cy.get("@test1").contains("like").click()
+        cy.get("@test1")
+          .should("contain", "1")
+          .and("not.contain", "0")
+      })
     })
   })
 })
