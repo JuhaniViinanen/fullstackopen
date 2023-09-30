@@ -63,12 +63,12 @@ describe("Blog app", function() {
       cy.contains("Testing with Cypress Anonymous")
     })
 
-    describe("and blogs exist", function() {
+    describe("and a blog exists", function() {
       beforeEach(function() {
         cy.createBlog({ title: "Testing", author: "Anon", url: "http://notreal.cs" })
       })
 
-      it("a blog can be liked", function() {
+      it("it can be liked", function() {
         cy.contains("Testing Anon").parent().as("test1")
         cy.get("@test1").contains("more").click()
         cy.get("@test1")
@@ -78,6 +78,18 @@ describe("Blog app", function() {
         cy.get("@test1")
           .should("contain", "1")
           .and("not.contain", "0")
+      })
+
+      it("it can be deleted", function() {
+        cy.on("window:confirm", function(str) {
+          expect(str).to.eq("Delete blog Testing by Anon?")
+        })
+        cy.contains("Testing Anon").parent().as("test1")
+        cy.get("@test1").contains("more").click()
+        cy.get("@test1").contains("delete").click()
+        cy.get("html")
+          .should("contain", "Testing by Anon deleted")
+          .and("not.contain", "Testing Anon")
       })
     })
   })
