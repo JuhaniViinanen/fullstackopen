@@ -46,4 +46,21 @@ describe("Blog app", function() {
         .should("not.contain", "Spongebob logged in")
     })
   })
+
+  describe("When logged in", function() {
+    beforeEach(function() {
+      cy.login({ username: "squarebob117", password: "supersecret" })
+    })
+
+    it("a new blog can be created", function() {
+      cy.contains("new blog").click()
+      cy.get("#blog-title-input").type("Testing with Cypress")
+      cy.get("#blog-author-input").type("Anonymous")
+      cy.get("#blog-url-input").type("http://cypress.com")
+      cy.contains("create").click()
+
+      cy.contains("blog Testing with Cypress created.")
+      cy.contains("Testing with Cypress Anonymous")
+    })
+  })
 })
