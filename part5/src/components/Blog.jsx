@@ -40,7 +40,7 @@ const Blog = ({ blog, likeFunction , deleteFunction, appUser }) => {
   )
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       {detailsVisible ? details() : simple()}
     </div>
 

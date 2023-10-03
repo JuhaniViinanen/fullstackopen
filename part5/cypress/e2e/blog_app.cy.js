@@ -104,5 +104,35 @@ describe("Blog app", function() {
         cy.get("@test1").should("not.contain", "delete")
       })
     })
+
+    describe("and multiple blogs exist", function() {
+      beforeEach(function() {
+        cy.createBlog({ title: "No likes", author: "Anon", url:"http://notreal.cs" })
+        cy.createBlog({ title: "One like", author: "Anon", url:"http://notreal.cs" })
+        cy.createBlog({ title: "Two likes", author: "Anon", url:"http://notreal.cs" })
+      })
+
+      it("blogs will be in descending order by likes", function() {
+        cy.contains("Two likes Anon").parent().as("two")
+        cy.get("@two").contains("button", "more").click()
+        cy.get("@two").contains("button", "like").click()
+        cy.get("@two").should("contain", "1")
+        cy.get("@two").contains("button", "like").click()
+        cy.get("@two").should("contain", "2")
+
+        cy.contains("One like Anon").parent().as("one")
+        cy.get("@one").contains("button", "more").click()
+        cy.get("@one").contains("button", "like").click()
+        cy.get("@one").should("contain", "1")
+
+        cy.contains("No likes Anon").parent().as("zero")
+        cy.get("@zero").contains("button", "more").click()
+        cy.get("@zero").should("contain", "0")
+
+        cy.get(".blog").eq(0).should("contain", "Two likes Anon")
+        cy.get(".blog").eq(1).should("contain", "One like Anon")
+        cy.get(".blog").eq(2).should("contain", "No likes Anon")
+      })
+    })
   })
 })
