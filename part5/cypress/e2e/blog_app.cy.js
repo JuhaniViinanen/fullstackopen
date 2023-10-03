@@ -91,6 +91,18 @@ describe("Blog app", function() {
           .should("contain", "Testing by Anon deleted")
           .and("not.contain", "Testing Anon")
       })
+
+      it("it can only be deleted by it's creator", function() {
+        cy.request("POST", "http://localhost:3003/api/users", {
+          "username": "patrick",
+          "password": "patrick",
+          "name": "patrick"
+        })
+        cy.login({ username: "patrick", password: "patrick" })
+        cy.contains("Testing Anon").parent().as("test1")
+        cy.get("@test1").contains("more").click()
+        cy.get("@test1").should("not.contain", "delete")
+      })
     })
   })
 })
