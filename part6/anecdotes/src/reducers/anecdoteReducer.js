@@ -28,14 +28,28 @@ const reducer = (state = initialState, action) => {
             return newState.toSorted( (a,b) => b.votes - a.votes )
         }
         case "NEW": {
-            return state.concat({
-                content: action.payload.anecdote,
-                id: getId(),
-                votes: 0
-            })
+            return state.concat( action.payload )
         }
         default:
             return state
+    }
+}
+
+export const voteForAnecdote = id => {
+    return {
+        type: "VOTE",
+        payload: { id }
+    }
+}
+
+export const createAnecdote = anecdote => {
+    return {
+        type: "NEW",
+        payload: {
+            content: anecdote,
+            id: getId,
+            votes: 0
+        }
     }
 }
   
