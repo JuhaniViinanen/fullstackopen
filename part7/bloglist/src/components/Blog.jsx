@@ -30,9 +30,7 @@ const Blog = ({ blog, likeFunction, deleteFunction, appUser }) => {
       <div>{blog.url}</div>
       <div>
         {blog.likes}
-        <button onClick={() => likeFunction(blog.id, blog.likes + 1)}>
-          like
-        </button>
+        <button onClick={() => likeFunction(blog, blog.likes + 1)}>like</button>
       </div>
       <div>{blog.user.name}</div>
       {blog.user.username === appUser.username && (
