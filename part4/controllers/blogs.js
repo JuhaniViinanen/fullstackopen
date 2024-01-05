@@ -3,6 +3,7 @@ const Blog = require("../models/blog")
 const User = require("../models/user")
 const jwt = require("jsonwebtoken")
 const {userExtractor} = require("../utils/middleware")
+const { update } = require("lodash")
 
 blogsRouter.get("/", async (req, res) => {
   const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 })
@@ -21,6 +22,19 @@ blogsRouter.post("/", userExtractor, async (req, res, next) => {
     await user.save()
     res.status(201).json(savedBlog)
   } catch(exception) {
+    next(exception)
+  }
+})
+
+blogsRouter.post("/:id/comments/", async (req, res, next) => {
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      {$push: { comments: req.body.comment }},
+      { runValidators: true, new: true }
+    )
+    res.status(200).json(updatedBlog)
+  } catch (exception) {
     next(exception)
   }
 })

@@ -36,4 +36,9 @@ const remove = async (blogID) => {
   return res.data;
 };
 
-export default { setToken, getAll, create, like, remove };
+const comment = async (blogID, comment) => {
+  const res = await axios.post(`${baseURL}/${blogID}/comments`, { comment });
+  return res.data;
+};
+
+export default { setToken, getAll, create, like, remove, comment };

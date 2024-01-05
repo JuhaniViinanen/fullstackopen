@@ -3,6 +3,7 @@ import {
   displaySuccessMessage,
   displayErrorMessage,
 } from "./notificationReducer";
+import { addBlog, removeUsersBlog } from "./usersReducer";
 import blogService from "../services/blogs";
 
 const blogSlice = createSlice({
@@ -23,10 +24,17 @@ const blogSlice = createSlice({
     removeBlog(state, action) {
       return state.filter((blog) => blog.id !== action.payload.id);
     },
+    addComment(state, action) {
+      return state.map((blog) =>
+        blog.id !== action.payload.id
+          ? blog
+          : { ...blog, comments: blog.comments.concat(action.payload.comment) }
+      );
+    },
   },
 });
 
-export const { setBlogs, appendBlog, replaceBlog, removeBlog } =
+export const { setBlogs, appendBlog, replaceBlog, removeBlog, addComment } =
   blogSlice.actions;
 
 export const initalizeBlogs = () => {
@@ -41,6 +49,7 @@ export const createBlog = (newBlog, user) => {
     try {
       const createdBlog = await blogService.create(newBlog);
       dispatch(appendBlog({ ...createdBlog, user: user }));
+      dispatch(addBlog(user, createdBlog));
       dispatch(displaySuccessMessage(`blog ${newBlog.title} created.`, 10));
     } catch (exception) {
       dispatch(displayErrorMessage(`${exception.response.data.error}`, 10));
@@ -65,11 +74,26 @@ export const deleteBlog = (blog) => {
     try {
       const res = await blogService.remove(blog.id);
       dispatch(removeBlog(blog));
+      dispatch(removeUsersBlog(blog));
       dispatch(
         displaySuccessMessage(`${blog.title} by ${blog.author} deleted`, 10)
       );
     } catch (exception) {
       console.log(exception);
+    }
+  };
+};
+
+export const commentBlog = (blog, comment) => {
+  return async (dispatch) => {
+    try {
+      const res = await blogService.comment(blog.id, comment);
+      dispatch(addComment({ id: blog.id, comment }));
+      dispatch(
+        displaySuccessMessage(`Added comment ${comment} to blog ${blog.title}`)
+      );
+    } catch (exception) {
+      dispatch(displayErrorMessage(`${exception.response.data.error}`, 10));
     }
   };
 };

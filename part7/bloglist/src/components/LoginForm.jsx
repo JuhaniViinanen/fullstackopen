@@ -1,44 +1,50 @@
-import { useState } from "react"
-import PropTypes from "prop-types"
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../reducers/userReducer";
+import { useNavigate } from "react-router-dom";
 
-const LoginForm = ({ loginFunction }) => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+const LoginForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = event => {
-    event.preventDefault()
-    loginFunction(username, password)
-    setUsername("")
-    setPassword("")
-  }
+  const handleLogin = (event) => {
+    event.preventDefault();
+    dispatch(loginUser(username, password));
+    setUsername("");
+    setPassword("");
+    navigate("/");
+  };
 
   return (
-    <form onSubmit={ handleLogin } id="#login-form">
-      <div id="div-login-username">
-                username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={ ({ target }) => setUsername(target.value) }
-        />
+    <form onSubmit={handleLogin}>
+      <div>
+        <label>
+          username:
+          <input
+            type="text"
+            value={username}
+            name="username"
+            onChange={({ target }) => setUsername(target.value)}
+            required
+          />
+        </label>
       </div>
-      <div id="div-login-password">
-                password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={ ({ target }) => setPassword(target.value) }
-        />
+      <div>
+        <label>
+          password:
+          <input
+            type="password"
+            value={password}
+            name="password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </label>
       </div>
-      <button type="submit" id="button-login">login</button>
+      <button type="submit">login</button>
     </form>
-  )
-}
+  );
+};
 
-LoginForm.propTypes = {
-  loginFunction: PropTypes.func.isRequired
-}
-
-export default LoginForm
+export default LoginForm;

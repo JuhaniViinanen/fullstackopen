@@ -1,56 +1,70 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { likeBlog, deleteBlog, commentBlog } from "../reducers/blogReducer";
+import { useNavigate } from "react-router-dom";
 
-const blogStyle = {
-  paddingTop: 10,
-  paddingLeft: 2,
-  border: "solid",
-  borderWidth: 1,
-  marginBottom: 5,
-};
+const Blog = ({ blog }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const appUser = useSelector((state) => state.user);
+  const [comment, setComment] = useState("");
 
-const Blog = ({ blog, likeFunction, deleteFunction, appUser }) => {
-  const [detailsVisible, setDetailsVisible] = useState(false);
+  const handleLike = () => {
+    dispatch(likeBlog(blog, blog.likes + 1));
+  };
 
-  const simple = () => (
-    <div>
-      <div>
-        {blog.title} {blog.author}
-        <button onClick={() => setDetailsVisible(true)}>more</button>
-      </div>
-    </div>
-  );
+  const handleDelete = () => {
+    if (window.confirm(`Delete blog ${blog.title}?`)) {
+      dispatch(deleteBlog(blog));
+      navigate("/blogs");
+    }
+  };
 
-  const details = () => (
-    <div>
-      <div>
-        {blog.title} {blog.author}
-        <button onClick={() => setDetailsVisible(false)}>less</button>
-      </div>
-      <div>{blog.url}</div>
-      <div>
-        {blog.likes}
-        <button onClick={() => likeFunction(blog, blog.likes + 1)}>like</button>
-      </div>
-      <div>{blog.user.name}</div>
-      {blog.user.username === appUser.username && (
-        <button onClick={() => deleteFunction(blog)}>delete</button>
-      )}
-    </div>
-  );
+  const handleComment = (e) => {
+    e.preventDefault();
+    dispatch(commentBlog(blog, comment));
+    setComment("");
+  };
+
+  if (!blog) return null;
 
   return (
-    <div style={blogStyle} className="blog">
-      {detailsVisible ? details() : simple()}
+    <div className="blog">
+      <h2>{blog.title}</h2>
+      <ul>
+        <li>
+          <a href={blog.url}>{blog.url}</a>
+        </li>
+        <li>
+          {`${blog.likes} likes`}{" "}
+          <button type="button" onClick={handleLike}>
+            like
+          </button>
+        </li>
+        <li>{`added by ${blog.user.name}`}</li>
+      </ul>
+      {appUser.username === blog.user.username && (
+        <button type="button" onClick={handleDelete}>
+          delete
+        </button>
+      )}
+      <h3>comments</h3>
+      <form onSubmit={handleComment}>
+        <input
+          type="text"
+          value={comment}
+          onChange={({ target }) => setComment(target.value)}
+          required
+        />
+        <button type="submit">add comment</button>
+      </form>
+      <ul>
+        {blog.comments.map((comment, index) => (
+          <li key={index}>{comment}</li>
+        ))}
+      </ul>
     </div>
   );
-};
-
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  likeFunction: PropTypes.func.isRequired,
-  deleteFunction: PropTypes.func.isRequired,
-  appUser: PropTypes.object.isRequired,
 };
 
 export default Blog;
