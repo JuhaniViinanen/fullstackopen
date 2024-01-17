@@ -24,7 +24,7 @@ const BlogForm = () => {
       <div style={{ display: visible ? "unset" : "none" }}>
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="blog-title-input">title:</label>
+            <label htmlFor="blog-title-input">title</label>
             <input
               type="text"
               value={title}
@@ -34,7 +34,7 @@ const BlogForm = () => {
             />
           </div>
           <div>
-            <label htmlFor="blog-author-input">author:</label>
+            <label htmlFor="blog-author-input">author</label>
             <input
               type="text"
               value={author}
@@ -44,7 +44,7 @@ const BlogForm = () => {
             />
           </div>
           <div>
-            <label htmlFor="blog-url-input">url:</label>
+            <label htmlFor="blog-url-input">url</label>
             <input
               type="url"
               value={url}
@@ -53,14 +53,20 @@ const BlogForm = () => {
               onChange={({ target }) => setUrl(target.value)}
             />
           </div>
-          <button type="submit">create</button>
-          <button type="button" onClick={() => setVisible(!visible)}>
-            cancel
-          </button>
+          <div className="formButtons">
+            <button type="submit">create</button>
+            <button type="button" onClick={() => setVisible(!visible)}>
+              cancel
+            </button>
+          </div>
         </form>
       </div>
       <div style={{ display: visible ? "none" : "unset" }}>
-        <button type="button" onClick={() => setVisible(!visible)}>
+        <button
+          className="toggleButton"
+          type="button"
+          onClick={() => setVisible(!visible)}
+        >
           create new
         </button>
       </div>

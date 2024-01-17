@@ -13,10 +13,12 @@ const NavigationBar = () => {
   };
 
   return (
-    <div>
+    <div className="navigationBar">
       <Link to={"/blogs"}>blogs</Link>
       <Link to={"/users"}>users</Link>
-      <em>{appUser.name}</em> logged in
+      <div>
+        <em>{appUser.name}</em> logged in
+      </div>
       <button onClick={handleLogout}>logout</button>
     </div>
   );

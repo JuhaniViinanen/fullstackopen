@@ -41,8 +41,8 @@ function App() {
     : null;
 
   return (
-    <div>
-      {appUser === null ? <h2>log in to application</h2> : <NavigationBar />}
+    <div className="app">
+      {appUser === null ? <h2>Log in to application</h2> : <NavigationBar />}
       <SuccessMessage message={successMessage} />
       <ErrorMessage message={errorMessage} />
       {appUser === null ? (
