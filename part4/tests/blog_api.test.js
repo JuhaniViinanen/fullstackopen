@@ -70,6 +70,7 @@ describe("POST /api/blogs", () => {
         expect(res.headers["content-type"]).toMatch(/application\/json/)
         delete res.body.id
         delete res.body.user
+        delete res.body.comments
         expect(res.body).toEqual(newBlog)
 
         const getres = await api.get("/api/blogs")
